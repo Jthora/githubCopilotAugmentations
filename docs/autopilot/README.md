@@ -23,3 +23,8 @@ High-Level Flow:
 7. Summarize and compact memory; loop or pause on stop conditions.
 
 See `specs/` for normative definitions.
+
+Checklists:
+- Phase 0: `checklists/phase-0.md` (complete)
+- Phase 1 (in progress): `checklists/phase-1.md`
+- Phase 2 (upcoming): `checklists/phase-2.md`
