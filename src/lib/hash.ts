@@ -3,7 +3,7 @@ import { createHash } from 'crypto';
 // Canonical JSON serialization per ADR-001
 export interface CanonicalDigestResult { json: string; sha256: string; }
 
-interface DigestOptions { allowlist?: string[]; }
+interface DigestOptions { allowlist?: string[]; sizeWarnBytes?: number; onSizeWarn?: (bytes: number) => void; }
 
 type JSONPrimitive = string | number | boolean | null;
 export type JSONValue = JSONPrimitive | JSONValue[] | { [key: string]: JSONValue };
@@ -11,7 +11,12 @@ export type JSONValue = JSONPrimitive | JSONValue[] | { [key: string]: JSONValue
 function normalize(value: unknown, allowlist?: string[]): JSONValue {
   if (value === null) return value;
   if (Array.isArray(value)) return value.map(v => normalize(v, allowlist));
-  if (typeof value !== 'object') return value as JSONPrimitive; // primitive
+  if (typeof value !== 'object') {
+    if (typeof value === 'string') {
+      try { return (value as string).normalize('NFC'); } catch { return value as JSONPrimitive; }
+    }
+    return value as JSONPrimitive; // primitive
+  }
   const out: { [key: string]: JSONValue } = {};
   const keys = Object.keys(value as Record<string, unknown>).sort();
   for (const k of keys) {
@@ -24,6 +29,10 @@ function normalize(value: unknown, allowlist?: string[]): JSONValue {
 export function canonicalDigest(value: unknown, opts: DigestOptions = {}): CanonicalDigestResult {
   const normalized = normalize(value, opts.allowlist);
   const json = JSON.stringify(normalized);
+  if (opts.sizeWarnBytes && opts.onSizeWarn) {
+    const byteLen = Buffer.byteLength(json, 'utf8');
+    if (byteLen > opts.sizeWarnBytes) opts.onSizeWarn(byteLen);
+  }
   const hash = createHash('sha256').update(json, 'utf8').digest('hex');
   return { json, sha256: hash };
 }

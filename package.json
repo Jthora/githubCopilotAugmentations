@@ -2,7 +2,7 @@
   "name": "copilot-macros",
   "displayName": "Copilot Macros",
   "description": "High-leverage prompt macros (Self Dialogue, Critique Pass) for GitHub Copilot in VS Code.",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "publisher": "your-publisher-id",
   "license": "MIT",
   "engines": {
@@ -77,6 +77,18 @@
       {
         "command": "copilotMacros.reloadMacros",
         "title": "Copilot: Reload Macros From Config"
+      },
+      {
+        "command": "autopilot.patterns.list",
+        "title": "Autopilot: List Patterns"
+      },
+      {
+        "command": "autopilot.patterns.validate",
+        "title": "Autopilot: Validate Patterns"
+      },
+      {
+        "command": "autopilot.guardrails.dryRun",
+        "title": "Autopilot: Guardrail Pipeline Dry Run"
       }
     ],
     "viewsContainers": {

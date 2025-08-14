@@ -2,6 +2,8 @@ import * as vscode from 'vscode';
 import { TEMPLATE_SELF_DIALOGUE, TEMPLATE_CRITIQUE, interpolate } from './lib/prompt';
 import { MacroRegistry, MacroDef } from './lib/registry';
 import { executeMacro } from './lib/pipeline';
+import { loadPatterns, PatternRegistry, RegisteredPattern } from './lib/patterns';
+import { createDefaultGuardrailPipeline } from './autopilot/guardrails';
 
 const builtInMacros: MacroDef[] = [
   { id: 'selfDialogue', title: 'Self Dialogue', template: TEMPLATE_SELF_DIALOGUE },
@@ -100,6 +102,15 @@ export function activate(context: vscode.ExtensionContext) {
     executeMacro(macro, getRunOptions());
   }
 
+  const patternRegistry = new PatternRegistry();
+  let cachedPatterns: RegisteredPattern[] = [];
+  async function refreshPatterns() {
+    cachedPatterns = await loadPatterns(vscode.workspace.workspaceFolders, channel);
+    patternRegistry.replaceAll(cachedPatterns);
+  }
+
+  const guardrailPipeline = createDefaultGuardrailPipeline();
+
   context.subscriptions.push(
     vscode.commands.registerCommand('copilotMacros.selfDialogue', () => runById('selfDialogue')),
     vscode.commands.registerCommand('copilotMacros.critique', () => runById('critique')),
@@ -144,6 +155,27 @@ export function activate(context: vscode.ExtensionContext) {
       treeProvider.refresh();
       updateStatusBar();
       vscode.window.showInformationMessage('Copilot macros reloaded.');
+    }),
+    vscode.commands.registerCommand('autopilot.patterns.list', async () => {
+      await refreshPatterns();
+      if (cachedPatterns.length === 0) { vscode.window.showInformationMessage('No patterns loaded.'); return; }
+      const lines = cachedPatterns.map(p => `${p.pattern} (priority=${p.priority}, hash=${p.patternHash.slice(0,8)}, source=${p.source})`);
+      channel.appendLine('[patterns] List:\n' + lines.join('\n'));
+      vscode.window.showInformationMessage(`${cachedPatterns.length} pattern(s) listed in OutputChannel.`);
+    }),
+    vscode.commands.registerCommand('autopilot.patterns.validate', async () => {
+      await refreshPatterns();
+      const errs = cachedPatterns.filter(p => !p.patternHash); // placeholder check
+      if (errs.length) {
+        vscode.window.showErrorMessage(`Pattern validation failed for ${errs.length} pattern(s). See OutputChannel.`);
+      } else {
+        vscode.window.showInformationMessage(`Pattern validation passed (${cachedPatterns.length}).`);
+      }
+    }),
+    vscode.commands.registerCommand('autopilot.guardrails.dryRun', async () => {
+      const results = await guardrailPipeline.run({}, channel);
+      const worst = results.find(r => r.status === 'fail') || results.find(r => r.status === 'warn') || results[results.length-1];
+      vscode.window.showInformationMessage(`Guardrail dry run: ${worst?.status || 'ok'} (${results.length} stages)`);
     })
   );
   context.subscriptions.push(channel);
