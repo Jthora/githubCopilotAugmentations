@@ -1,0 +1,16 @@
+version: 1
+pattern: sample-entity
+priority: 90
+match:
+  kind: entity
+outputs:
+  tasks:
+    - id: "model-${name}"
+      title: "Model: ${name}"
+      description: "Create model for ${name}"
+    - id: "test-${name}"
+      title: "Test: ${name}"
+      description: "Create tests for ${name}"
+constraints:
+  uniquenessKey: name
+  maxDepth: 1

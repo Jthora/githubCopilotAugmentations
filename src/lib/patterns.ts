@@ -40,8 +40,21 @@ function validatePattern(raw: RawPatternFile, source: string): { ok: boolean; me
   if (raw.version !== 1) messages.push(`version must be 1 (got ${raw.version})`);
   if (!raw.pattern || typeof raw.pattern !== 'string') messages.push('pattern id missing');
   if (raw.priority !== undefined && typeof raw.priority !== 'number') messages.push('priority must be number');
-  // Additional schema checks (shallow):
   if (raw.outputs && typeof raw.outputs !== 'object') messages.push('outputs must be object');
+  // tasks id uniqueness
+  const taskIds = new Set<string>();
+  const dupTaskIds: string[] = [];
+  if (raw.outputs?.tasks) {
+    for (const t of raw.outputs.tasks) {
+      if (!t.id) { messages.push('task missing id'); continue; }
+      if (taskIds.has(t.id)) dupTaskIds.push(t.id); else taskIds.add(t.id);
+    }
+  }
+  if (dupTaskIds.length) messages.push(`duplicate task ids: ${dupTaskIds.join(',')}`);
+  if (raw.constraints) {
+    if (raw.constraints.maxDepth !== undefined && typeof raw.constraints.maxDepth !== 'number') messages.push('constraints.maxDepth must be number');
+    if (raw.constraints.uniquenessKey !== undefined && typeof raw.constraints.uniquenessKey !== 'string') messages.push('constraints.uniquenessKey must be string');
+  }
   return { ok: messages.length === 0, messages: messages.map(m => `${source}: ${m}`) };
 }
 

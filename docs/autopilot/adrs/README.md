@@ -33,8 +33,8 @@ References:
 
 | ADR | Title | Status | Date |
 |-----|-------|--------|------|
-| ADR-001 | Deterministic Hashing & Canonical Serialization | Proposed | (pending) |
+| ADR-001 | Deterministic Hashing & Canonical Serialization | Accepted (partial) | 2025-08-13 |
 | ADR-002 | Guardrail Philosophy & Enforcement Model | Proposed | (pending) |
 | ADR-003 | Branching & Git Workflow for Iterations | Proposed | (pending) |
 | ADR-004 | Memory Tiering & Log Compaction Strategy | Proposed | (pending) |
-| ADR-005 | Pattern Registry Loading & Validation | Proposed | (pending) |
+| ADR-005 | Pattern Registry Loading & Validation | Accepted (partial) | 2025-08-13 |

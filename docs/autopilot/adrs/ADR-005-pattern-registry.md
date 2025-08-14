@@ -1,6 +1,6 @@
 # ADR-005: Pattern Registry Loading & Validation
 Date: 2025-08-14
-Status: Proposed
+Status: Accepted (Phase 1 partial)
 
 ## Context
 Patterns drive plan expansion. They must be deterministic, validated, and composable. A malformed or non-deterministic pattern jeopardizes reproducibility and safety.

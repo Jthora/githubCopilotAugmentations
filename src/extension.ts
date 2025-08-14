@@ -104,10 +104,13 @@ export function activate(context: vscode.ExtensionContext) {
 
   const patternRegistry = new PatternRegistry();
   let cachedPatterns: RegisteredPattern[] = [];
-  async function refreshPatterns() {
+  async function refreshPatterns(initial = false) {
     cachedPatterns = await loadPatterns(vscode.workspace.workspaceFolders, channel);
     patternRegistry.replaceAll(cachedPatterns);
+    if (initial) channel.appendLine(`[patterns] Activated with ${cachedPatterns.length} pattern(s).`);
   }
+  // Initial pattern load (non-blocking)
+  refreshPatterns(true);
 
   const guardrailPipeline = createDefaultGuardrailPipeline();
 

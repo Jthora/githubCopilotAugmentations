@@ -1,6 +1,6 @@
 # ADR-001: Deterministic Hashing & Canonical Serialization
 Date: 2025-08-14
-Status: Proposed
+Status: Accepted (Phase 1 partial)
 
 ## Context
 Auto-Pilot requires reproducibility. Plans, patterns, and iteration inputs must produce identical digests across machines and runs when logical content is unchanged. We need a canonical serialization method, stable ordering, and hash algorithm free of platform-dependent artifacts (line endings, path separators, locale, object key ordering). Hashes seed pseudo-random decisions (when needed) and deduplicate memory/log entries.
