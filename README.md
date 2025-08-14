@@ -41,6 +41,7 @@ LICENSE
 | Surface | A UI entry point (command palette, keybinding, status bar item, sidebar view). |
 | Guardrail | Logic to prevent problematic behavior (oversized context, binary files, secrets). |
 | Prompt Template | Parameterizable text with placeholders for selection, file name, etc. |
+| Auto-Pilot | (Planned) Deterministic local automation loop: pattern-based plan expansion + guarded iteration engine (see `docs/autopilot/`). |
 
 ## Improvement Opportunities (Snapshot)
 See detailed table in `docs/roadmap/roadmap.md`.
@@ -54,8 +55,8 @@ Recently implemented improvements:
 
 Still planned:
 - Template snapshot tests
-- Config-driven custom macros file
 - Guardrails (secret/binary detection, length truncation)
+- Auto-Pilot deterministic iteration engine (docs scaffolded)
 
 ## Planned Phases (Short Form)
 1. Core Macros & Keybindings
@@ -107,9 +108,11 @@ Extension now includes Phase 1 + Phase 2 surfaces.
 | `copilotMacros.debug` | false | Verbose debug logging to OutputChannel |
 
 ### Current Design Constraints
+### Current Design Constraints
 - No auto-send (awaiting stable API)
 - No truncation / secret scan (planned Phase 5)
-- Macros fixed (config coming Phase 3)
+- Macros fixed (config coming Phase 3; user macro file partially implemented)
+- Auto-Pilot not yet implemented (specs drafted under `docs/autopilot/`)
 
 ## Contributing
 - Open issues for new macro ideas with a clear “why” and example raw prompt.
