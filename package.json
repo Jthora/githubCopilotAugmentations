@@ -5,8 +5,12 @@
   "version": "0.0.1",
   "publisher": "your-publisher-id",
   "license": "MIT",
-  "engines": { "vscode": "^1.90.0" },
-  "categories": ["Other"],
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": [
+    "Other"
+  ],
   "main": "dist/src/extension.js",
   "contributes": {
     "configuration": {
@@ -50,26 +54,60 @@
       }
     },
     "commands": [
-      { "command": "copilotMacros.selfDialogue", "title": "Copilot: Self Dialogue" },
-      { "command": "copilotMacros.critique", "title": "Copilot: Critique Pass" },
-      { "command": "copilotMacros.cycleStatusBarMacro", "title": "Copilot: Cycle Status Bar Macro" },
-      { "command": "copilotMacros.pickMacro", "title": "Copilot: Pick Macro" },
-      { "command": "copilotMacros.previewPrompt", "title": "Copilot: Preview Macro Prompt" },
-      { "command": "copilotMacros.reloadMacros", "title": "Copilot: Reload Macros From Config" }
+      {
+        "command": "copilotMacros.selfDialogue",
+        "title": "Copilot: Self Dialogue"
+      },
+      {
+        "command": "copilotMacros.critique",
+        "title": "Copilot: Critique Pass"
+      },
+      {
+        "command": "copilotMacros.cycleStatusBarMacro",
+        "title": "Copilot: Cycle Status Bar Macro"
+      },
+      {
+        "command": "copilotMacros.pickMacro",
+        "title": "Copilot: Pick Macro"
+      },
+      {
+        "command": "copilotMacros.previewPrompt",
+        "title": "Copilot: Preview Macro Prompt"
+      },
+      {
+        "command": "copilotMacros.reloadMacros",
+        "title": "Copilot: Reload Macros From Config"
+      }
     ],
     "viewsContainers": {
       "activitybar": [
-        { "id": "copilotMacrosContainer", "title": "Copilot Macros", "icon": "resources/robot.svg" }
+        {
+          "id": "copilotMacrosContainer",
+          "title": "Copilot Macros",
+          "icon": "resources/robot.svg"
+        }
       ]
     },
     "views": {
       "copilotMacrosContainer": [
-  { "id": "copilotMacrosView", "name": "Macros", "icon": "resources/robot.svg" }
+        {
+          "id": "copilotMacrosView",
+          "name": "Macros",
+          "icon": "resources/robot.svg"
+        }
       ]
     },
     "keybindings": [
-      { "command": "copilotMacros.selfDialogue", "key": "cmd+alt+d", "when": "editorTextFocus && !editorReadonly" },
-      { "command": "copilotMacros.critique", "key": "cmd+alt+c", "when": "editorTextFocus && !editorReadonly" }
+      {
+        "command": "copilotMacros.selfDialogue",
+        "key": "cmd+alt+d",
+        "when": "editorTextFocus && !editorReadonly"
+      },
+      {
+        "command": "copilotMacros.critique",
+        "key": "cmd+alt+c",
+        "when": "editorTextFocus && !editorReadonly"
+      }
     ],
     "menus": {
       "editor/context": [
@@ -96,16 +134,21 @@
     "test:integration": "npm run build && node ./scripts/run-integration-tests.js"
   },
   "devDependencies": {
+    "@types/chai": "^5.2.2",
+    "@types/mocha": "^10.0.0",
+    "@types/node": "^20.0.0",
     "@types/vscode": "^1.102.0",
     "@typescript-eslint/eslint-plugin": "^7.0.0",
     "@typescript-eslint/parser": "^7.0.0",
-    "@types/mocha": "^10.0.0",
-    "@types/node": "^20.0.0",
+    "@vscode/test-electron": "^2.4.0",
+    "chai": "^5.2.1",
+    "eslint": "^8.57.0",
     "mocha": "^10.4.0",
     "ts-node": "^10.9.2",
-    "@vscode/test-electron": "^2.4.0",
-    "eslint": "^8.57.0",
     "typescript": "^5.4.0",
     "vsce": "^2.15.0"
+  },
+  "dependencies": {
+    "yaml": "^2.5.0"
   }
 }
