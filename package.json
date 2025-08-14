@@ -41,6 +41,11 @@
           "type": "boolean",
           "default": false,
           "description": "Enable verbose debug logging to OutputChannel"
+        },
+        "copilotMacros.includeBuiltIns": {
+          "type": "boolean",
+          "default": true,
+          "description": "Include built-in macros alongside user-defined ones from .copilot-macros.json"
         }
       }
     },
@@ -49,7 +54,8 @@
       { "command": "copilotMacros.critique", "title": "Copilot: Critique Pass" },
       { "command": "copilotMacros.cycleStatusBarMacro", "title": "Copilot: Cycle Status Bar Macro" },
       { "command": "copilotMacros.pickMacro", "title": "Copilot: Pick Macro" },
-      { "command": "copilotMacros.previewPrompt", "title": "Copilot: Preview Macro Prompt" }
+      { "command": "copilotMacros.previewPrompt", "title": "Copilot: Preview Macro Prompt" },
+      { "command": "copilotMacros.reloadMacros", "title": "Copilot: Reload Macros From Config" }
     ],
     "viewsContainers": {
       "activitybar": [

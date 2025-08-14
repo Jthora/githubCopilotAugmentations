@@ -3,10 +3,40 @@ import { TEMPLATE_SELF_DIALOGUE, TEMPLATE_CRITIQUE, interpolate } from './lib/pr
 import { MacroRegistry, MacroDef } from './lib/registry';
 import { executeMacro } from './lib/pipeline';
 
-const registry = new MacroRegistry([
+const builtInMacros: MacroDef[] = [
   { id: 'selfDialogue', title: 'Self Dialogue', template: TEMPLATE_SELF_DIALOGUE },
   { id: 'critique', title: 'Critique Pass', template: TEMPLATE_CRITIQUE }
-]);
+];
+const registry = new MacroRegistry(builtInMacros);
+
+async function loadUserMacros(workspaceFolders: readonly vscode.WorkspaceFolder[] | undefined, includeBuiltIns: boolean, channel: vscode.OutputChannel) {
+  if (!workspaceFolders || workspaceFolders.length === 0) {
+    if (includeBuiltIns) registry.replaceAll(builtInMacros);
+    return;
+  }
+  const root = workspaceFolders[0].uri; // single-root assumption for now
+  const configFile = vscode.Uri.joinPath(root, '.copilot-macros.json');
+  try {
+    const stat = await vscode.workspace.fs.stat(configFile);
+    if (stat) {
+      const data = await vscode.workspace.fs.readFile(configFile);
+      const text = new TextDecoder('utf-8').decode(data);
+      const parsed = JSON.parse(text);
+      if (Array.isArray(parsed)) {
+        const valid: MacroDef[] = parsed.filter(m => m && typeof m.id === 'string' && typeof m.title === 'string' && typeof m.template === 'string');
+        const combined = includeBuiltIns ? [...builtInMacros, ...valid] : valid;
+        registry.replaceAll(combined);
+        channel.appendLine(`[macros] Loaded ${valid.length} user macros (${combined.length} total).`);
+        return;
+      } else {
+        channel.appendLine('[macros] Config file is not an array. Ignoring.');
+      }
+    }
+  } catch (err: any) {
+    channel.appendLine(`[macros] No user config or failed to load: ${err?.message || err}`);
+  }
+  if (includeBuiltIns) registry.replaceAll(builtInMacros);
+}
 
 class MacroTreeProvider implements vscode.TreeDataProvider<MacroDef> {
   private _onDidChangeTreeData = new vscode.EventEmitter<void>();
@@ -43,6 +73,8 @@ export function activate(context: vscode.ExtensionContext) {
   }
 
   updateStatusBar();
+  const cfg = vscode.workspace.getConfiguration();
+  loadUserMacros(vscode.workspace.workspaceFolders, cfg.get('copilotMacros.includeBuiltIns', true), channel).then(() => treeProvider.refresh());
   context.subscriptions.push(statusBar);
   context.subscriptions.push(vscode.workspace.onDidChangeConfiguration(e => {
     if (e.affectsConfiguration('copilotMacros.showStatusBar') || e.affectsConfiguration('copilotMacros.statusBarMacro')) {
@@ -105,6 +137,13 @@ export function activate(context: vscode.ExtensionContext) {
       const prompt = interpolate(macro.template, { context: contextText });
       const doc = await vscode.workspace.openTextDocument({ content: prompt, language: 'markdown' });
       await vscode.window.showTextDocument(doc, { preview: true });
+    }),
+    vscode.commands.registerCommand('copilotMacros.reloadMacros', async () => {
+      const cfg = vscode.workspace.getConfiguration();
+      await loadUserMacros(vscode.workspace.workspaceFolders, cfg.get('copilotMacros.includeBuiltIns', true), channel);
+      treeProvider.refresh();
+      updateStatusBar();
+      vscode.window.showInformationMessage('Copilot macros reloaded.');
     })
   );
   context.subscriptions.push(channel);

@@ -1,0 +1,7 @@
+[
+  {
+    "id": "lightRefactor",
+    "title": "Light Refactor Suggestions",
+    "template": "Suggest small, low-risk refactors (naming, duplication, clarity). Provide bullets only.\n\nContext:\n{{context}}"
+  }
+]
