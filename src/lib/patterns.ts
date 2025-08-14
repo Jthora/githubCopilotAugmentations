@@ -102,10 +102,22 @@ export async function loadPatterns(workspaceFolders: readonly vscode.WorkspaceFo
   // Duplicate id detection
   const byId: Record<string, RegisteredPattern[]> = {};
   for (const p of loaded) { (byId[p.pattern] ||= []).push(p); }
+  const duplicateIds: string[] = [];
   for (const id of Object.keys(byId)) {
     if (byId[id].length > 1) {
+      duplicateIds.push(id);
       errors.push(`duplicate pattern id '${id}' in sources: ${byId[id].map(p => p.source).join(', ')}`);
     }
+  }
+  if (duplicateIds.length) {
+    // Keep first occurrence per id (already in loaded order); filter out others
+    const seen = new Set<string>();
+    const filtered: RegisteredPattern[] = [];
+    for (const p of loaded) {
+      if (!seen.has(p.pattern)) { filtered.push(p); seen.add(p.pattern); }
+    }
+    channel.appendLine(`[patterns] Dropped ${loaded.length - filtered.length} duplicate pattern definitions.`);
+    loaded.splice(0, loaded.length, ...filtered);
   }
   loaded.sort((a, b) => a.priority - b.priority || a.patternHash.localeCompare(b.patternHash));
   if (errors.length) {

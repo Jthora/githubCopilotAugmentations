@@ -4,16 +4,16 @@ Goal: Deterministic expansion of root plan into stable task graph; pattern valid
 
 Item | Done | Notes
 ---- | ---- | -----
-Accept ADR-001 / ADR-005 (update status) |  | 
+Accept ADR-001 / ADR-005 (update status) | ✅ | Accepted partial
 Implement recursive pattern discovery | ✅ | Implemented in `loadPatterns`
 Implement pattern schema validation (required fields, version) | ✅ | Basic present; deepen rules TBD
 Detect duplicate pattern ids | ✅ | Implemented
 Deterministic ordering (priority, hash) | ✅ | Implemented sort
 Add pattern list & validate commands | ✅ | `autopilot.patterns.*`
-Add unit tests for ordering & duplicates |  | 
-Add pattern sample fixtures |  | 
+Add unit tests for ordering & duplicates | ✅ | `test/patterns.test.ts`
+Add pattern sample fixtures | ✅ | `autopilot/patterns/*`
 Document pattern command usage in README |  | 
-Enhance validation (constraints, outputs.tasks IDs) |  | 
+Enhance validation (constraints, outputs.tasks IDs) | ✅ | Implemented
 Hash stability tests (permutation) |  | 
 Unicode normalization test |  | 
 Size warning test (>2MB synthetic) |  | 

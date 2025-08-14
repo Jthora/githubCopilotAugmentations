@@ -1,0 +1,10 @@
+version: 1
+pattern: sample-entity
+priority: 95
+match:
+  kind: entity
+outputs:
+  tasks:
+    - id: "dummy-${name}"
+      title: "Dummy: ${name}"
+      description: "Duplicate pattern test"
