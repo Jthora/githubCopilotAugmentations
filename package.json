@@ -89,6 +89,14 @@
       {
         "command": "autopilot.guardrails.dryRun",
         "title": "Autopilot: Guardrail Pipeline Dry Run"
+      },
+      {
+        "command": "autopilot.plan.expand",
+        "title": "Autopilot: Expand Plan"
+      },
+      {
+        "command": "autopilot.iteration.runOnce",
+        "title": "Autopilot: Run Single Iteration"
       }
     ],
     "viewsContainers": {

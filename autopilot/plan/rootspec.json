@@ -1,0 +1,7 @@
+{
+  "name": "SampleProject",
+  "entities": [
+    { "name": "User" },
+    { "name": "Team" }
+  ]
+}

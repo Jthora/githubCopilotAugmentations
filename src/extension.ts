@@ -4,6 +4,8 @@ import { MacroRegistry, MacroDef } from './lib/registry';
 import { executeMacro } from './lib/pipeline';
 import { loadPatterns, PatternRegistry, RegisteredPattern } from './lib/patterns';
 import { createDefaultGuardrailPipeline } from './autopilot/guardrails';
+import { loadRootSpec, buildExpandedPlan } from './autopilot/plan';
+import { runSingleIteration } from './autopilot/iteration';
 
 const builtInMacros: MacroDef[] = [
   { id: 'selfDialogue', title: 'Self Dialogue', template: TEMPLATE_SELF_DIALOGUE },
@@ -113,6 +115,7 @@ export function activate(context: vscode.ExtensionContext) {
   refreshPatterns(true);
 
   const guardrailPipeline = createDefaultGuardrailPipeline();
+  let expandedPlan: import('./autopilot/plan').ExpandedPlan | null = null;
 
   context.subscriptions.push(
     vscode.commands.registerCommand('copilotMacros.selfDialogue', () => runById('selfDialogue')),
@@ -179,6 +182,19 @@ export function activate(context: vscode.ExtensionContext) {
       const results = await guardrailPipeline.run({}, channel);
       const worst = results.find(r => r.status === 'fail') || results.find(r => r.status === 'warn') || results[results.length-1];
       vscode.window.showInformationMessage(`Guardrail dry run: ${worst?.status || 'ok'} (${results.length} stages)`);
+    }),
+    vscode.commands.registerCommand('autopilot.plan.expand', async () => {
+      const { spec, digest } = await loadRootSpec(vscode.workspace.workspaceFolders);
+      if (!spec || !digest) { vscode.window.showErrorMessage('No root spec found at autopilot/plan/rootspec.json'); return; }
+      await refreshPatterns();
+      expandedPlan = buildExpandedPlan(spec, digest, cachedPatterns);
+      channel.appendLine(`[plan] Expanded ${expandedPlan.tasks.length} task(s) from root digest ${digest.slice(0,8)}`);
+      vscode.window.showInformationMessage(`Plan expanded: ${expandedPlan.tasks.length} tasks.`);
+    }),
+    vscode.commands.registerCommand('autopilot.iteration.runOnce', async () => {
+      if (!expandedPlan) { vscode.window.showErrorMessage('Expand plan first.'); return; }
+      const res = await runSingleIteration(expandedPlan, channel);
+      vscode.window.showInformationMessage(`Iteration: ${res.status}${res.task ? ' task=' + res.task.id : ''}`);
     })
   );
   context.subscriptions.push(channel);
