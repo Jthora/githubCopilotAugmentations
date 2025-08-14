@@ -14,10 +14,10 @@ Add unit tests for ordering & duplicates | ✅ | `test/patterns.test.ts`
 Add pattern sample fixtures | ✅ | `autopilot/patterns/*`
 Document pattern command usage in README |  | 
 Enhance validation (constraints, outputs.tasks IDs) | ✅ | Implemented
-Hash stability tests (permutation) |  | 
-Unicode normalization test |  | 
-Size warning test (>2MB synthetic) |  | 
-Update risk matrix delta for pattern risks |  | 
+Hash stability tests (permutation) | ✅ | `hash.test.ts`
+Unicode normalization test | ✅ | `hash.test.ts`
+Size warning test (>2MB synthetic) | ✅ | `hash.test.ts`
+Update risk matrix delta for pattern risks | ✅ | Added new rows
 Mark ADRs accepted once criteria met |  | 
 
 Exit Criteria:

@@ -58,6 +58,19 @@ Still planned:
 - Guardrails (secret/binary detection, length truncation)
 - Auto-Pilot deterministic iteration engine (docs scaffolded)
 
+### Autopilot (Early Experimental)
+Early foundational pieces are scaffolded:
+- Pattern registry loading (recursive) with validation & duplicate dropping
+- Hashing utility (canonical JSON + NFC normalization) powering reproducibility
+- Guardrail pipeline scaffold with dry run command
+
+Commands:
+- `Autopilot: List Patterns` (`autopilot.patterns.list`)
+- `Autopilot: Validate Patterns` (`autopilot.patterns.validate`)
+- `Autopilot: Guardrail Pipeline Dry Run` (`autopilot.guardrails.dryRun`)
+
+See `docs/autopilot/` for roadmap, ADRs, and phase checklists.
+
 ## Planned Phases (Short Form)
 1. Core Macros & Keybindings
 2. Sidebar Macro Palette + Status Bar Shortcut

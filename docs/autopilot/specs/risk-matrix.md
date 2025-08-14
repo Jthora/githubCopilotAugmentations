@@ -13,5 +13,8 @@ Stale Patterns | Medium | Medium | Pattern version tests | pattern-schema.md | p
 Flaky Tests Loop | Low | Medium | Retry + quarantine | guardrails.md | flakeRate
 Rename Misclassified | Medium | Low | Similarity heuristic pre-diff | guardrails.md | renameFalsePos
 Spec Hash Drift | Low | High | Signature pause gating | reproducibility.md | hashMismatchCount
+Duplicate Pattern IDs | Medium | Low | Validation drop duplicates | pattern-schema.md | dupPatternIds
+Oversized Hash Input | Low | Low | Size warning threshold | reproducibility.md | largeHashWarnings
+Unicode Normalization Drift | Low | Medium | NFC normalization in hashing | reproducibility.md | unicodeDriftCount
 
 Metrics to record per iteration into `metrics.json`.
